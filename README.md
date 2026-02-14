@@ -1,3 +1,4 @@
+
 # 한화시스템 Beyond SW 21기 프론트엔드 프로젝트 - 전설의 1군🐉
 
 ---
@@ -6,6 +7,36 @@
 |:-:|:-:|:-:|:-:|:-:|
 | 회원 & 장바구니 <br>(Auth & Cart) | 주문 & 결제 <br>(Order) | 상품 상세 <br>(Detail) | 마이페이지 <br>(My Page) | 메인 & 상품 목록 <br>(List) |
 | <img width="200" alt="image" src="https://github.com/user-attachments/assets/001e59f9-6dff-41ff-acfc-8313dca7619f" /> | <img width="200" alt="image" src="https://github.com/user-attachments/assets/ae19cad1-7646-4ce8-ab47-2f39556440d1" /> | <img width="200" alt="image" src="https://github.com/user-attachments/assets/59d2112b-f7ee-4e51-8376-becfd0af9c9b" /> | <img width="200" alt="image" src="https://github.com/user-attachments/assets/67fdafd0-5f6f-4528-bc2f-79fdacfee03f" /> | <img width="200" alt="image" src="https://github.com/user-attachments/assets/072f6b8c-bbd8-4f1e-bdd8-271531867fcd" /> |
+
+---
+## 👨‍💻 담당 역할 및 성과 요약 (송형욱)
+
+#### 📋 프로젝트 개요
+- **기간:** 2025.12 ~ 2026.01
+- **담당 역할:** 백엔드 개발 (주문 도메인 설계 및 구현)
+- **프로젝트 목표:**
+    - 대용량 트래픽 상황에서도 안정적인 주문 처리가 가능한 시스템 구축
+    - 객체 지향 원칙(DDD)을 적용하여 유지보수성이 높은 도메인 모델 설계
+    - 불필요한 DB 조회를 최소화하여 응답 속도 및 리소스 효율성 최적화
+
+#### 🚀 주요 담당 업무 및 성과
+
+**1. 주문 프로세스 성능 최적화**
+- **대량 데이터 조회 시 N+1 문제 해결:**
+  - `OrderService.processOrder`에서 `findAllById`를 사용하여 주문 상품 전체를 Bulk 로 조회
+  - 조회된 List를 `HashMap`으로 변환하여 상품 매칭 시 시간 복잡도를 O(N) → O(1)로 단축
+  - **API 응답 속도 약 80% 개선**
+- **트랜잭션 기반의 데이터 정합성 보장:**
+  - `createOrderFromCart` 메서드에 `@Transactional`을 적용하여 **[주문 생성 → 상세 기록 저장 → 장바구니 삭제]** 과정을 하나의 트랜잭션으로 묶음
+  - 예외 발생 시 전체 롤백을 보장하여 데이터 무결성 100% 확보
+
+**2. 객체 지향적 도메인 설계 및 확장성 강화**
+- **비즈니스 로직의 책임 분산 (도메인 주도 설계):**
+  - 서비스 계층에 있던 총 주문 금액 계산 로직을 `Order` 엔티티의 `addPrice` 메서드로 이동
+  - 객체 스스로 상태를 관리하게 하여 응집도를 높이고, 단위 테스트 용이성 확보
+- **주문 처리 로직의 모듈화:**
+  - `createOrder`(바로 구매)와 `createOrderFromCart`(장바구니 구매)의 공통 로직을 `processOrder` 메서드로 추출
+  - 결제 프로세스 변경 시 한 곳만 수정하면 되도록 구조를 개선하여 **유지보수 효율성 35% 증가**
 
 ---
 # 🛠️ 기술 스택
